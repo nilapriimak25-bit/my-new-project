@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
+    <!-- Підключення Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -13,12 +14,14 @@
     <div class="weather-app-wrapper">
         <div class="weather-app">
 
+            <!-- Форма пошуку -->
             <form id="search-form" class="search-form">
                 <input type="search" placeholder="Введіть місто..." autofocus="on" autocomplete="off" id="city-input"
                     class="form-control" />
                 <button type="submit" class="search-button">Пошук</button>
             </form>
 
+            <!-- Дані погоди -->
             <div class="overview">
                 <h1 id="city">Київ</h1>
                 <ul>
@@ -51,7 +54,8 @@
         </footer>
     </div>
 
-<script src="./index.js"></script>
+    <!-- Чітке підключення скрипта без жодних вкладених папок -->
+    <script src="index.js"></script>
 </body>
 
 </html>
