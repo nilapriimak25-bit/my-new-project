@@ -5,15 +5,7 @@ function formatDate(timestamp) {
   let minutes = date.getMinutes();
   if (minutes < 10) minutes = `0${minutes}`;
 
-  let days = [
-    "Неділя",
-    "Понеділок",
-    "Вівторок",
-    "Середа",
-    "Четвер",
-    "П'ятниця",
-    "Субота"
-  ];
+  let days = ["Неділя", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"];
   let day = days[date.getDay()];
   return `${day} ${hours}:${minutes}`;
 }
@@ -27,7 +19,6 @@ function displayWeather(response) {
   let dateElement = document.querySelector("#date");
   let iconElement = document.querySelector("#icon");
 
-  // Той самий правильний шлях до даних SheCodes API, який ми шукали!
   temperatureElement.innerHTML = Math.round(response.data.temperature.current);
   cityElement.innerHTML = response.data.city;
   descriptionElement.innerHTML = response.data.condition.description;
@@ -57,5 +48,4 @@ function handleSubmit(event) {
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", handleSubmit);
 
-// Стартове місто
 search("Київ");
