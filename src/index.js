@@ -1,4 +1,3 @@
-// 1. Форматування дати та часу
 function formatDate(timestamp) {
   let date = new Date(timestamp);
   let hours = date.getHours();
@@ -19,7 +18,6 @@ function formatDate(timestamp) {
   return `${day} ${hours}:${minutes}`;
 }
 
-// 2. Виведення отриманих даних на сторінку
 function displayWeather(response) {
   let temperatureElement = document.querySelector("#temperature");
   let cityElement = document.querySelector("#city");
@@ -29,31 +27,25 @@ function displayWeather(response) {
   let dateElement = document.querySelector("#date");
   let iconElement = document.querySelector("#icon");
 
-  // Оновлюємо дані з API
-  temperatureElement.innerHTML = Math.round(response.data.main.temp);
-  cityElement.innerHTML = response.data.name;
-  descriptionElement.innerHTML = response.data.weather[0].description;
-  humidityElement.innerHTML = response.data.main.humidity;
-  windElement.innerHTML = Math.round(response.data.wind.speed * 3.6); // переводимо в км/год
-  dateElement.innerHTML = formatDate(response.data.dt * 1000);
+  // Той самий правильний шлях до даних SheCodes API, який ми шукали!
+  temperatureElement.innerHTML = Math.round(response.data.temperature.current);
+  cityElement.innerHTML = response.data.city;
+  descriptionElement.innerHTML = response.data.condition.description;
+  humidityElement.innerHTML = response.data.temperature.humidity;
+  windElement.innerHTML = Math.round(response.data.wind.speed * 3.6); 
+  dateElement.innerHTML = formatDate(response.data.time * 1000);
   
-  // Динамічна іконка погоди
-  iconElement.setAttribute(
-    "src",
-    `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
-  );
-  iconElement.setAttribute("alt", response.data.weather[0].description);
+  iconElement.setAttribute("src", response.data.condition.icon_url);
+  iconElement.setAttribute("alt", response.data.condition.description);
 }
 
-// 3. Функція пошуку міста через API
 function search(city) {
-  let apiKey = "6b10eb468ede78f144d0a2c844o71t30"; // Ваш особистий робочий ключ
-  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=uk`;
+  let apiKey = "b2a5adcde842475e111ec3a118fbc028"; 
+  let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
   
   axios.get(apiUrl).then(displayWeather);
 }
 
-// 4. Обробка події відправки форми
 function handleSubmit(event) {
   event.preventDefault();
   let cityInputElement = document.querySelector("#city-input");
@@ -65,5 +57,5 @@ function handleSubmit(event) {
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", handleSubmit);
 
-// Початкове місто при завантаженні сторінки
+// Стартове місто
 search("Київ");
