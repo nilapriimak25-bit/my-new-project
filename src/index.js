@@ -29,12 +29,12 @@ function displayWeather(response) {
   let dateElement = document.querySelector("#date");
   let iconElement = document.querySelector("#icon");
 
-  // Оновлюємо текст
+  // Оновлюємо дані з API
   temperatureElement.innerHTML = Math.round(response.data.main.temp);
   cityElement.innerHTML = response.data.name;
   descriptionElement.innerHTML = response.data.weather[0].description;
   humidityElement.innerHTML = response.data.main.humidity;
-  windElement.innerHTML = Math.round(response.data.wind.speed * 3.6); // переведення м/с в км/год (за бажанням)
+  windElement.innerHTML = Math.round(response.data.wind.speed * 3.6); // переводимо в км/год
   dateElement.innerHTML = formatDate(response.data.dt * 1000);
   
   // Динамічна іконка погоди
@@ -47,7 +47,7 @@ function displayWeather(response) {
 
 // 3. Функція пошуку міста через API
 function search(city) {
-  let apiKey = "6b10eb468ede78f144d0a2c844o71t30"; // Вставте сюди свій реальний API ключ від OpenWeatherMap
+  let apiKey = "6b10eb468ede78f144d0a2c844o71t30"; // Ваш особистий робочий ключ
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=uk`;
   
   axios.get(apiUrl).then(displayWeather);
