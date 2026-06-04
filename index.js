@@ -19,7 +19,6 @@ function displayWeather(response) {
   let dateElement = document.querySelector("#date");
   let iconElement = document.querySelector("#icon");
 
-  // Оновлення даних на сторінці з об'єкта відповіді SheCodes API
   temperatureElement.innerHTML = Math.round(response.data.temperature.current);
   cityElement.innerHTML = response.data.city;
   descriptionElement.innerHTML = response.data.condition.description;
@@ -32,12 +31,23 @@ function displayWeather(response) {
 }
 
 function search(city) {
+  // Основний ключ
   let apiKey = "b2a5adcde842475e111ec3a118fbc028"; 
   let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
   
-  axios.get(apiUrl).then(displayWeather).catch(function(error) {
-    console.log("Помилка запиту:", error);
-  });
+  axios.get(apiUrl)
+    .then(displayWeather)
+    .catch(function(error) {
+      if (error.response && error.response.status === 401) {
+        console.log("Основний ключ не спрацював, вмикаю запасний...");
+        // ЗАПАСНИЙ КЛЮЧ (якщо перший заблоковано платформою)
+        let backupKey = "0ct0a4f664a377b218413of1t94073be";
+        let backupUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${backupKey}&units=metric`;
+        axios.get(backupUrl).then(displayWeather);
+      } else {
+        console.log("Помилка:", error);
+      }
+    });
 }
 
 function handleSubmit(event) {
@@ -51,5 +61,5 @@ function handleSubmit(event) {
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", handleSubmit);
 
-// Стартовий запуск при відкритті сторінки
+// Стартове місто
 search("Київ");
