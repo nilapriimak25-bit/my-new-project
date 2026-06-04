@@ -1,0 +1,65 @@
+function formatDate(timestamp) {
+  let date = new Date(timestamp);
+  let hours = date.getHours();
+  if (hours < 10) hours = `0${hours}`;
+  let minutes = date.getMinutes();
+  if (minutes < 10) minutes = `0${minutes}`;
+
+  let days = ["Неділя", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"];
+  let day = days[date.getDay()];
+  return `${day} ${hours}:${minutes}`;
+}
+
+function displayWeather(response) {
+  let temperatureElement = document.querySelector("#temperature");
+  let cityElement = document.querySelector("#city");
+  let descriptionElement = document.querySelector("#description");
+  let humidityElement = document.querySelector("#humidity");
+  let windElement = document.querySelector("#wind");
+  let dateElement = document.querySelector("#date");
+  let iconElement = document.querySelector("#icon");
+
+  temperatureElement.innerHTML = Math.round(response.data.temperature.current);
+  cityElement.innerHTML = response.data.city;
+  descriptionElement.innerHTML = response.data.condition.description;
+  humidityElement.innerHTML = response.data.temperature.humidity;
+  windElement.innerHTML = Math.round(response.data.wind.speed * 3.6); 
+  dateElement.innerHTML = formatDate(response.data.time * 1000);
+  
+  iconElement.setAttribute("src", response.data.condition.icon_url);
+  iconElement.setAttribute("alt", response.data.condition.description);
+}
+
+function search(city) {
+  // Основний ключ
+  let apiKey = "b2a5adcde842475e111ec3a118fbc028"; 
+  let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
+  
+  axios.get(apiUrl)
+    .then(displayWeather)
+    .catch(function(error) {
+      if (error.response && error.response.status === 401) {
+        console.log("Основний ключ не спрацював, вмикаю запасний...");
+        // ЗАПАСНИЙ КЛЮЧ (якщо перший заблоковано платформою)
+        let backupKey = "0ct0a4f664a377b218413of1t94073be";
+        let backupUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${backupKey}&units=metric`;
+        axios.get(backupUrl).then(displayWeather);
+      } else {
+        console.log("Помилка:", error);
+      }
+    });
+}
+
+function handleSubmit(event) {
+  event.preventDefault();
+  let cityInputElement = document.querySelector("#city-input");
+  if (cityInputElement.value) {
+    search(cityInputElement.value);
+  }
+}
+
+let form = document.querySelector("#search-form");
+form.addEventListener("submit", handleSubmit);
+
+// Стартове місто
+search("Київ");
